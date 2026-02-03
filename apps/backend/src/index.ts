@@ -1,9 +1,24 @@
+import express from "express";
 import "dotenv/config";
-import { prisma } from "@repo/database";
+import routes from "./routes/index.js";
+import cors from "cors";
+// import authMiddleware from "./middlewares/auth.middleware";
 
-async function test() {
-  const user = await prisma.user.findFirst();
-  console.log(user);
-}
+const app = express();
 
-test();
+app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3002",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
+// app.use(authMiddleware);
+app.use("/v1", routes);
+// .env varibales
+const { PORT } = process.env;
+
+app.listen(Number(PORT), () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
