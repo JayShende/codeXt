@@ -4,22 +4,55 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface userProps {
   ws: WebSocket;
-  room: string;
-  userID?: string;
+  roomId: string;
+  userId?: string;
 }
 
 const PORT = Number(process.env.PORT);
+const JWT_SECRET = process.env.WS_JWT_SECRET || "";
 
 const users: userProps[] = [];
 const wss = new WebSocketServer({ port: PORT });
 
+function verifyToken(token: string) {
+  let decoded: JwtPayload | undefined;
+  try {
+    decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    if (!decoded.roomId) {
+      return;
+    }
+  } catch (error) {
+    console.log("Error is ", error);
+    return null;
+  }
+
+  if (!decoded.roomId) {
+    return null;
+  }
+  return decoded.roomId;
+}
+
 wss.on("connection", (ws, req) => {
-  console.log("Client Connected");
+  console.log("Client Trying To Connect");
+
+  const req_url = req.url; // should be Something like ws://localhost:3000?token=123123
+  if (!req_url) {
+    return;
+  }
+  const query_params = new URLSearchParams(req_url.split("?")[1]); // the above will split the req url into array aster the "?" as ["ws://localhost:3000","token=123123"]
+  const token = query_params.get("token") || "";
+
+  const roomId = verifyToken(token);
+  if (roomId == null) {
+    ws.close();
+    return;
+  }
   users.push({
     ws: ws,
-    room: "1234Test", // This is To Be Extrated From The Token in the Req URL
+    roomId: roomId, // This is To Be Extrated From The Token in the Req URL
     // userID: "",
   });
+  console.log("New Client Conntected to Room-", roomId);
 
   ws.on("message", async (data) => {
     const parsedData = JSON.parse(data.toString());
@@ -34,7 +67,7 @@ wss.on("connection", (ws, req) => {
         // console.log(user.room == roomId);
 
         if (
-          user.room == roomId &&
+          user.roomId == roomId &&
           ws != user.ws &&
           user.ws.readyState === WebSocket.OPEN
         ) {
