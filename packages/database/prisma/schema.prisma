@@ -24,6 +24,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  room          Room[]
+
   @@unique([email])
   @@map("user")
 }
@@ -74,4 +76,18 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+
+
+// -----------------------------------------------------
+// CodeXt App Tables
+
+model Room{
+  id      String    @id @default(cuid())
+  slug    String
+  roomId  String
+  userId  String
+
+  user User   @relation(fields: [userId],references: [id])
 }
