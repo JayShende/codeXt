@@ -85,8 +85,7 @@ model Verification {
 
 model Room{
   id      String    @id @default(cuid())
-  slug    String
-  roomId  String
+  roomId  String    @unique
   userId  String
 
   user User   @relation(fields: [userId],references: [id])

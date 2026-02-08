@@ -8,6 +8,10 @@ interface userProps {
   userId?: string;
 }
 
+// token={
+//   roomId="room_id_here"
+// }
+
 const PORT = Number(process.env.PORT);
 const JWT_SECRET = process.env.WS_JWT_SECRET || "";
 

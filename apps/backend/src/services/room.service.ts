@@ -6,9 +6,9 @@ import { nanoid } from "nanoid";
 
 const createRoom = async (userId: string) => {
   const slug = nanoid(5);
+  console.log(slug);
   const room = await prisma.room.create({
     data: {
-      slug: slug,
       userId: userId,
       roomId: slug,
     },

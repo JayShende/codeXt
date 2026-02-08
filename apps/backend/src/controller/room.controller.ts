@@ -9,6 +9,7 @@ const createRoom = async (req: Request, res: Response) => {
     const room = await roomService.createRoom(req.user?.id!);
     return response(res, HttpStatus.OK, "Room Creation Successfull", room);
   } catch (error) {
+    console.log(error);
     if (error instanceof ApiError) {
       return response(res, error.statusCode, error.message, null);
     }

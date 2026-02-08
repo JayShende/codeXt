@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import {prisma} from "@repo/database"
+import { prisma } from "@repo/database";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -8,9 +8,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    minPasswordLength:5
+    minPasswordLength: 5,
   },
-  trustedOrigins: [
-    "http://localhost:3000",
-  ],
+  trustedOrigins: ["http://localhost:3000"],
 });
