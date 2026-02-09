@@ -1,5 +1,7 @@
+import EditorPage from "@/components/editor";
 import { prisma } from "@repo/database";
 import "dotenv/config";
+import jwt from "jsonwebtoken";
 export default async function Page({
   params,
 }: {
@@ -8,9 +10,22 @@ export default async function Page({
   const { roomId } = await params;
   const response = await checkRoomId(roomId);
   if (!response) {
-    return <div className="font-bold text-xl text-red-400">The Slug {roomId} Dont Exist in Db</div>;
+    return (
+      <div className="font-bold text-xl text-red-400">
+        The Slug {roomId} Dont Exist in Db
+      </div>
+    );
   }
-  return <div className="font-bold text-xl text-emerald-400">The Slug Exist in the DB: {roomId}</div>;
+  const JWT_SECRET = process.env.WS_JWT_SECRET || "";
+  console.log(JWT_SECRET);
+  // Generate the Token
+  const tokenPayload = {
+    roomId: roomId,
+  };
+  const token = jwt.sign(tokenPayload, JWT_SECRET);
+  console.log(token);
+
+  return <EditorPage roomId={roomId} token={token} />;
 }
 
 async function checkRoomId(roomId: string) {
