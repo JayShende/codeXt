@@ -33,6 +33,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { toggleSidebar } from "@/redux/slice/sidebar/sideBarToggle.slice";
+import Image from "next/image";
 interface mainPageProps {
   roomSlug: string;
   token: string;
@@ -237,6 +238,13 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
             <Separator
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Image
+              src="/asset/images/codext_new_light.png"
+              width={100}
+              height={50}
+              alt="logo_dark"
+              className="m-0 -mb-2 -ml-5 h-fit w-fit p-0"
             />
           </div>
         </header>

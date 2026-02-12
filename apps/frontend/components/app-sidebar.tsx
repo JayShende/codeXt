@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { changeLanguage } from "@/redux/slice/editor/language.slice";
+import Image from "next/image";
 // This is sample data.
 const data = {
   user: {
@@ -177,8 +178,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenuButton size="lg" asChild>
           <div>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-              <Terminal className="size-4" />
+            <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg border p-0.5">
+              <Image
+                src="/asset/images/codext_new.png"
+                width={32}
+                height={32}
+                alt="logo"
+              />
             </div>
             <div className="flex flex-col gap-0.5 leading-none">
               <span className="font-semibold">CodeXt</span>
