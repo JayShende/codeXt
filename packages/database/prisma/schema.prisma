@@ -83,10 +83,27 @@ model Verification {
 // -----------------------------------------------------
 // CodeXt App Tables
 
-model Room{
-  id      String    @id @default(cuid())
-  roomId  String    @unique
-  userId  String
+model Room {
+  id          String   @id @default(cuid())
+  name        String
+  ownerId     String
+  roomSlug    String  @unique
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
 
-  user User   @relation(fields: [userId],references: [id])
+  owner       User     @relation(fields: [ownerId], references: [id])
+  snippet     Snippet?
+
+  @@index([expiresAt])
+}
+
+model Snippet {
+  id        String   @id @default(cuid())
+  roomId    String   @unique
+  language  String
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }

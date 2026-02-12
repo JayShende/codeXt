@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { WebSocket, WebSocketServer } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { prisma } from "@repo/database";
 
 interface userProps {
   ws: WebSocket;
@@ -65,6 +66,24 @@ wss.on("connection", (ws, req) => {
     if (parsedData.type == "chat") {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
+      try {
+        const room = await prisma.room.findFirst({
+          where: {
+            roomSlug: roomId,
+          },
+        });
+        await prisma.snippet.update({
+          where: {
+            roomId: room?.id,
+          },
+          data: {
+            code: message,
+          },
+        });
+      } catch (error) {
+        console.log("Some error",error);
+      }
+
       users.forEach((user) => {
         // console.log("setp-1");
         // console.log("roomId", roomId);

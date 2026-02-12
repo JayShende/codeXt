@@ -1,4 +1,4 @@
-import EditorPage from "@/components/editor";
+import MainPage from "@/components/main-page";
 import { prisma } from "@repo/database";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
@@ -11,31 +11,48 @@ export default async function Page({
   const response = await checkRoomId(roomId);
   if (!response) {
     return (
-      <div className="font-bold text-xl text-red-400">
+      <div className="text-xl font-bold text-red-400">
         The Slug {roomId} Dont Exist in Db
       </div>
     );
   }
+
   const JWT_SECRET = process.env.WS_JWT_SECRET || "";
-  console.log(JWT_SECRET);
+
   // Generate the Token
   const tokenPayload = {
     roomId: roomId,
   };
   const token = jwt.sign(tokenPayload, JWT_SECRET);
-  console.log(token);
+  let initialCode: string | undefined = "";
 
-  return <EditorPage roomId={roomId} token={token} />;
+  try {
+    const room = await prisma.room.findFirst({
+      where: {
+        roomSlug: roomId,
+      },
+    });
+
+    const snippet = await prisma.snippet.findFirst({
+      where: {
+        roomId: room?.id,
+      },
+    });
+    initialCode = snippet?.code || " ";
+  } catch (error) {
+    console.log("Error in Db Query", error);
+  }
+  console.log(`Initial code -${initialCode} RoomSLug- ${roomId}`);
+  return <MainPage initialCode={initialCode} roomSlug={roomId} token={token} />;
 }
 
 async function checkRoomId(roomId: string) {
   try {
     const check = await prisma.room.findUnique({
       where: {
-        roomId: roomId,
+        roomSlug: roomId,
       },
     });
-    console.log("Response", check);
     if (check == null) {
       return false;
     }
