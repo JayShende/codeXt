@@ -3,6 +3,7 @@ import languageSlice from "../slice/editor/language.slice";
 import roomSlugSlice from "../slice/app/roomSlug.slice";
 import initialCodeSlice from "../slice/editor/initCode.slice";
 import sideBarToggleSlice from "../slice/sidebar/sideBarToggle.slice";
+import setAuthSession from "../slice/auth/session.slice";
 
 export const makeStore = () => {
   return configureStore({
@@ -12,6 +13,7 @@ export const makeStore = () => {
       initcode: initialCodeSlice,
       roomSlug: roomSlugSlice,
       sidebarToggle: sideBarToggleSlice,
+      authSession: setAuthSession,
     },
   });
 };

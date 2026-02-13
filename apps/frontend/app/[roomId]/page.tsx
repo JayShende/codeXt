@@ -1,4 +1,5 @@
 import MainPage from "@/components/main-page";
+import { getAuthSession } from "@/lib/auth-session";
 import { prisma } from "@repo/database";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
@@ -16,7 +17,7 @@ export default async function Page({
       </div>
     );
   }
-
+  getAuthSession();
   const JWT_SECRET = process.env.WS_JWT_SECRET || "";
 
   // Generate the Token
@@ -42,7 +43,6 @@ export default async function Page({
   } catch (error) {
     console.log("Error in Db Query", error);
   }
-  console.log(`Initial code -${initialCode} RoomSLug- ${roomId}`);
   return <MainPage initialCode={initialCode} roomSlug={roomId} token={token} />;
 }
 

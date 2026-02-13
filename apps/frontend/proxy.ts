@@ -41,7 +41,7 @@ export async function proxy(req: NextRequest) {
 
   // 1. Forward the cookies from Next.js to Express
   const cookieHeader = req.headers.get("cookie") || "";
-
+  console.log("proxy", cookieHeader);
   let session = null;
   try {
     const authRes = await fetch(EXPRESS_AUTH_URL, {

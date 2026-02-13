@@ -40,6 +40,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { changeLanguage } from "@/redux/slice/editor/language.slice";
 import Image from "next/image";
+import { NoAuthUser } from "./no-auth-user";
 // This is sample data.
 const data = {
   user: {
@@ -171,19 +172,21 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const lang2 = useAppSelector((state) => state.language);
+  const language = useAppSelector((state) => state.language);
+  const userAuthSession = useAppSelector((state) => state.authSession);
   const dispatch = useAppDispatch();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenuButton size="lg" asChild>
           <div>
-            <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg border p-0.5">
+            <div className="text-sidebar-primary-foreground flex aspect-square size-8 p-0.5 items-center justify-center rounded-lg border ">
               <Image
                 src="/asset/images/codext_new.png"
                 width={32}
                 height={32}
                 alt="logo"
+                priority={true}
               />
             </div>
             <div className="flex flex-col gap-0.5 leading-none">
@@ -202,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             onValueChange={(value) => {
               console.log("the value is ", value);
               dispatch(changeLanguage(value));
-              console.log(lang2);
+              console.log(language);
             }}
           >
             <SelectTrigger className="w-45">
@@ -270,7 +273,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {userAuthSession == null ? (
+          <NoAuthUser />
+        ) : (
+          <NavUser  />
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

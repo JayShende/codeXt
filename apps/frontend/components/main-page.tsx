@@ -26,6 +26,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { toast } from "sonner"
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -51,6 +52,8 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
   const lang2 = useAppSelector((state) => state.language);
   const roomSlugHook = useAppSelector((state) => state.roomSlug);
   const initialCodeHook = useAppSelector((state) => state.initcode);
+  const userAuthSession = useAppSelector((state) => state.authSession);
+  console.log("The Auth Session in the Main compoenet is ", userAuthSession);
   const dispatch = useAppDispatch();
   // const [isOpen,setIsopen]=useState(false);
   const isOpen = useAppSelector((state) => state.sidebarToggle);
@@ -68,13 +71,16 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
 
     ws.onopen = () => {
       console.log("Connection Established");
+      toast.success("Connected To The Websocket Server.")
     };
     ws.onerror = (error) => {
       console.log("Error", error);
+      toast.error("Websocket Error Check Console")
     };
 
     ws.onclose = () => {
       console.log("Connection Closed");
+       toast.warning("Websocket Connection Closed.")
     };
 
     ws.onmessage = (event) => {
@@ -104,9 +110,9 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
     dispatch(setInitialCode(initialCode));
   }, [roomSlug, initialCode, dispatch]);
 
-  useEffect(() => {
-    console.log("Redux UPDATED:", roomSlugHook, initialCodeHook);
-  }, [roomSlugHook, initialCodeHook]);
+  // useEffect(() => {
+  //   console.log("Redux UPDATED:", roomSlugHook, initialCodeHook);
+  // }, [roomSlugHook, initialCodeHook]);
   const isDataReady =
     roomSlugHook === roomSlug && initialCodeHook === initialCode;
   // return (
@@ -244,7 +250,8 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
               width={100}
               height={50}
               alt="logo_dark"
-              className="m-0 -mb-2 -ml-5 h-fit w-fit p-0"
+              className="w-20 -ml-2"
+               priority={true}
             />
           </div>
         </header>
