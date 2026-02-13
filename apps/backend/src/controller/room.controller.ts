@@ -9,7 +9,6 @@ const createRoom = async (req: Request, res: Response) => {
     const room = await roomService.createRoom(req.user?.id!);
     return response(res, HttpStatus.OK, "Room Creation Successfull", room);
   } catch (error) {
-    console.log(error);
     if (error instanceof ApiError) {
       return response(res, error.statusCode, error.message, null);
     }
@@ -22,6 +21,35 @@ const createRoom = async (req: Request, res: Response) => {
   }
 };
 
+const roomDetails = async (req: Request, res: Response) => {
+  try {
+    const rawSlug = req.params.roomSlug;
+    const roomSlug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
+    if (!roomSlug) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, "Room Slug is required");
+    }
+    const details = await roomService.roomDetails(roomSlug);
+    return response(
+      res,
+      HttpStatus.OK,
+      "Room Details Fetch Successfull",
+      details,
+    );
+  } catch (error) {
+    console.log(error);
+    if (error instanceof ApiError) {
+      return response(res, error.statusCode, error.message, null);
+    }
+    return response(
+      res,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      "Internal server error",
+      error,
+    );
+  }
+};
+
 export default {
   createRoom,
+  roomDetails,
 };

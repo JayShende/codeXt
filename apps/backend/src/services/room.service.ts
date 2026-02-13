@@ -26,6 +26,25 @@ const createRoom = async (userId: string) => {
   return room;
 };
 
+const roomDetails = async (roomSlug: string) => {
+  const details = await prisma.room.findUnique({
+    where: {
+      roomSlug,
+    },
+    include: {
+      owner: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return details;
+};
+
 export default {
   createRoom,
+  roomDetails,
 };
