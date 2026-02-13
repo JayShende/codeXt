@@ -26,7 +26,7 @@ export default async function Page({
   };
   const token = jwt.sign(tokenPayload, JWT_SECRET);
   let initialCode: string | undefined = "";
-
+  let initialLanguage: string | undefined = "";
   try {
     const room = await prisma.room.findFirst({
       where: {
@@ -40,10 +40,18 @@ export default async function Page({
       },
     });
     initialCode = snippet?.code || " ";
+    initialLanguage = snippet?.language || " ";
   } catch (error) {
     console.log("Error in Db Query", error);
   }
-  return <MainPage initialCode={initialCode} roomSlug={roomId} token={token} />;
+  return (
+    <MainPage
+      initialCode={initialCode}
+      roomSlug={roomId}
+      token={token}
+      initialLanguage={initialLanguage}
+    />
+  );
 }
 
 async function checkRoomId(roomId: string) {

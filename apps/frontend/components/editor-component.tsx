@@ -20,7 +20,7 @@ const EditorComponent = ({
   const editorLanguage = useAppSelector((state) => state.language);
   const roomSlug = useAppSelector((state) => state.roomSlug);
   const initialCode = useAppSelector((state) => state.initcode);
-
+  const initialLanguage = useAppSelector((state) => state.language);
   // Cleanup any active ResizeObserver on unmount
   useEffect(() => {
     return () => {
@@ -46,7 +46,7 @@ const EditorComponent = ({
     >
       <Editor
         height="100%"
-        defaultLanguage="typescript"
+        defaultLanguage={initialLanguage}
         defaultValue={initialCode}
         theme="vs-dark" // built-in theme (dark mode)
         options={{

@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import testRoute from "./test.route.js";
 import roomRoute from "./room.route.js";
+import editorRoute from "./editor.route.js";
 
 const router: Router = express.Router();
 
@@ -12,6 +13,10 @@ const defaultRoutes = [
   {
     path: "/room",
     route: roomRoute,
+  },
+  {
+    path: "/editor",
+    route: editorRoute,
   },
 ];
 

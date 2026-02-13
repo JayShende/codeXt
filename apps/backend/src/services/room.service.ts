@@ -44,6 +44,7 @@ const roomDetails = async (roomSlug: string) => {
   return details;
 };
 
+
 export default {
   createRoom,
   roomDetails,

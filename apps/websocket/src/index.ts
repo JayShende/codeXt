@@ -81,7 +81,7 @@ wss.on("connection", (ws, req) => {
           },
         });
       } catch (error) {
-        console.log("Some error",error);
+        console.log("Some error", error);
       }
 
       users.forEach((user) => {
@@ -100,6 +100,50 @@ wss.on("connection", (ws, req) => {
               type: "chat",
               message: message,
               roomId,
+            }),
+          );
+        }
+      });
+    }
+    if (parsedData.type == "update_editor_settings") {
+      const roomId = parsedData.roomId;
+      // const settings = parsedData.settings;
+      const language = parsedData.language;
+      // update the settings in the database
+      try {
+        const room = await prisma.room.findFirst({
+          where: {
+            roomSlug: roomId,
+          },
+        });
+        await prisma.snippet.update({
+          where: {
+            roomId: room?.id,
+          },
+          data: {
+            language: language,
+          },
+        });
+      } catch (error) {
+        console.log("Some error", error);
+      }
+
+      users.forEach((user) => {
+        // console.log("setp-1");
+        // console.log("roomId", roomId);
+        // console.log(user.room == roomId);
+
+        if (
+          user.roomId == roomId &&
+          ws != user.ws &&
+          user.ws.readyState === WebSocket.OPEN
+        ) {
+          // console.log("RoomId is Same");
+          user.ws.send(
+            JSON.stringify({
+              type: "update_editor_settings",
+              roomId,
+              language: language,
             }),
           );
         }

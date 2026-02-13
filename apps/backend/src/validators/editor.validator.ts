@@ -1,0 +1,60 @@
+import { z } from "zod";
+
+const updateLanguageBody = z.object({
+  body: z.object({
+    roomSlug: z.string({ message: "roomSlug must be a valid String" }),
+    language: z.enum(
+      [
+        "plaintext",
+        "javascript",
+        "typescript",
+        "html",
+        "css",
+        "scss",
+        "less",
+        "json",
+        "markdown",
+        "python",
+        "java",
+        "c",
+        "cpp",
+        "csharp",
+        "go",
+        "rust",
+        "php",
+        "ruby",
+        "kotlin",
+        "swift",
+        "scala",
+        "dart",
+        "shell",
+        "bash",
+        "powershell",
+        "yaml",
+        "xml",
+        "toml",
+        "ini",
+        "sql",
+        "dockerfile",
+        "graphql",
+        "lua",
+        "perl",
+        "r",
+        "objective-c",
+        "objective-cpp",
+        "haskell",
+        "clojure",
+        "fsharp",
+        "vb",
+        "bat",
+      ],
+      {
+        message: "Invalid language selection",
+      },
+    ),
+  }),
+});
+
+export default {
+  updateLanguageBody,
+};

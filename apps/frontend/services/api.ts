@@ -31,23 +31,30 @@ export const signIn = async (data: signInBody) => {
   return response.data;
 };
 
-
-export const getSession=async()=>{
+export const getSession = async () => {
   const response = await axios({
     method: "get",
     url: "http://localhost:3001/api/auth/get-session",
     withCredentials: true,
   });
- 
-  return response.data;
-}
 
-export const logOut=async()=>{
-    const response = await axios({
+  return response.data;
+};
+
+export const logOut = async () => {
+  const response = await axios({
     method: "post",
     url: "http://localhost:3001/api/auth/sign-out",
     withCredentials: true,
   });
- 
+
   return response.data;
-}
+};
+
+export const getRoomInfo = async (roomSlug: string) => {
+  const response = await axios({
+    method: "get",
+    url: `http://localhost:3001/v1/room/getRoomDetails/${roomSlug}`,
+  });
+  return response.data.data;
+};

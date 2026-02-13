@@ -15,18 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import EditorComponent from "./editor-component";
 import { setInitialCode } from "@/redux/slice/editor/initCode.slice";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -35,34 +28,39 @@ import {
 } from "@/components/ui/sidebar";
 import { toggleSidebar } from "@/redux/slice/sidebar/sideBarToggle.slice";
 import Image from "next/image";
+
+import { Badge } from "./ui/badge";
+import { useGetRoomDetails } from "@/services/queries";
+import { Spinner } from "./ui/spinner";
+import RoomInfo from "./room-info";
 interface mainPageProps {
   roomSlug: string;
   token: string;
   initialCode: string;
+  initialLanguage: string;
 }
 
-const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
+const MainPage = ({
+  roomSlug,
+  token,
+  initialCode,
+  initialLanguage,
+}: mainPageProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<any>(null);
   const isRemoteUpdateRef = useRef(false);
+  const isRemoteLanguageUpdateRef = useRef(false);
   const wsRef = useRef<WebSocket | null>(null);
   const monacoRef = useRef<any>(null);
-  const initialCodeRef = useRef<string | undefined>("");
 
   const lang2 = useAppSelector((state) => state.language);
   const roomSlugHook = useAppSelector((state) => state.roomSlug);
   const initialCodeHook = useAppSelector((state) => state.initcode);
   const userAuthSession = useAppSelector((state) => state.authSession);
-  console.log("The Auth Session in the Main compoenet is ", userAuthSession);
   const dispatch = useAppDispatch();
-  // const [isOpen,setIsopen]=useState(false);
   const isOpen = useAppSelector((state) => state.sidebarToggle);
-  // const setIsopen=useAppDispatch
-
-  function toggleDispatch() {
-    dispatch(toggleSidebar());
-  }
   // WebSocket
+  // dispatch(changeLanguage(initialLanguage));
   useEffect(() => {
     const wsUrl = `ws://localhost:8080?token=${token}`;
 
@@ -71,25 +69,32 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
 
     ws.onopen = () => {
       console.log("Connection Established");
-      toast.success("Connected To The Websocket Server.")
+      toast.success("Connected To The Websocket Server.");
     };
     ws.onerror = (error) => {
       console.log("Error", error);
-      toast.error("Websocket Error Check Console")
+      toast.error("Websocket Error Check Console");
     };
 
     ws.onclose = () => {
       console.log("Connection Closed");
-       toast.warning("Websocket Connection Closed.")
+      toast.warning("Websocket Connection Closed.");
     };
 
     ws.onmessage = (event) => {
       const newMessage = event.data;
       const parsedMessage = JSON.parse(newMessage);
+      console.log("Parsed Message is ", parsedMessage);
       if (parsedMessage.type == "chat") {
         isRemoteUpdateRef.current = true;
         editorRef.current?.setValue(parsedMessage.message);
         isRemoteUpdateRef.current = false;
+      }
+      if (parsedMessage.type == "update_editor_settings") {
+        isRemoteLanguageUpdateRef.current = true;
+        console.log("inside");
+        dispatch(changeLanguage(parsedMessage.language));
+        isRemoteLanguageUpdateRef.current = false;
       }
     };
     return () => ws.close();
@@ -101,138 +106,32 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
     const model = editorRef.current.getModel();
     if (!model) return;
 
+    // the below changes the current editor language
     monacoRef.current.editor.setModelLanguage(model, lang2);
+    console.log("here hu", lang2);
+    // // to chnage and sync language changes across editors send a message
+    const messageBody = {
+      type: "update_editor_settings",
+      roomId: roomSlug,
+      language: lang2,
+    };
+    console.log(JSON.stringify(messageBody));
+    wsRef.current?.send(JSON.stringify(messageBody));
   }, [lang2]);
 
   // set the store Variables
   useEffect(() => {
     dispatch(setRoomSlug(roomSlug));
     dispatch(setInitialCode(initialCode));
-  }, [roomSlug, initialCode, dispatch]);
+    dispatch(changeLanguage(initialLanguage));
+  }, [roomSlug, initialCode, dispatch, initialLanguage]);
 
   // useEffect(() => {
   //   console.log("Redux UPDATED:", roomSlugHook, initialCodeHook);
   // }, [roomSlugHook, initialCodeHook]);
+
   const isDataReady =
     roomSlugHook === roomSlug && initialCodeHook === initialCode;
-  // return (
-  //   <>
-  //     <div className="flex justify-between p-5">
-  //       <Input placeholder="Text Here" className="w-xs" ref={inputRef} />
-  //       <Button
-  //         variant="outline"
-  //         onClick={() => {
-  //           const codeValue = inputRef.current?.value || "";
-  //           editorRef.current?.setValue(codeValue);
-  //         }}
-  //       >
-  //         Chnage Code
-  //       </Button>
-  //       <Button
-  //         onClick={() => {
-  //           const code = editorRef.current?.getValue();
-  //           console.log("Send Code:", code);
-  //           const messageBody = {
-  //             type: "chat",
-  //             roomId: roomSlug,
-  //             message: code,
-  //           };
-  //           wsRef.current?.send(JSON.stringify(messageBody));
-  //           // send to backend
-  //           // run compiler
-  //           // save to DB
-  //         }}
-  //       >
-  //         Button
-  //       </Button>
-  //     </div>
-  //     <div className="h-full p-4 pt-0">
-  //       {isDataReady ? (
-  //         <EditorComponent
-  //           editorRef={editorRef}
-  //           monacoRef={monacoRef}
-  //           isRemoteUpdateRef={isRemoteUpdateRef}
-  //           wsRef={wsRef}
-  //         />
-  //       ) : (
-  //         <div className="flex h-125 items-center justify-center">
-  //           <p>Loading Workspace... hello</p>
-  //         </div>
-  //       )}
-  //     </div>
-  //     <div className="p-6">
-  //       <Select
-  //         onValueChange={(value) => {
-  //           console.log("the value is ", value);
-  //           dispatch(changeLanguage(value));
-  //           console.log(lang2);
-  //         }}
-  //       >
-  //         <SelectTrigger className="w-45">
-  //           <SelectValue placeholder="Select Language" />
-  //         </SelectTrigger>
-
-  //         <SelectContent>
-  //           <SelectGroup>
-  //             {/* Plain text */}
-  //             <SelectItem value="plaintext">Plain Text</SelectItem>
-
-  //             {/* Web */}
-  //             <SelectItem value="javascript">JavaScript</SelectItem>
-  //             <SelectItem value="typescript">TypeScript</SelectItem>
-  //             <SelectItem value="html">HTML</SelectItem>
-  //             <SelectItem value="css">CSS</SelectItem>
-  //             <SelectItem value="scss">SCSS</SelectItem>
-  //             <SelectItem value="less">LESS</SelectItem>
-  //             <SelectItem value="json">JSON</SelectItem>
-  //             <SelectItem value="markdown">Markdown</SelectItem>
-
-  //             {/* Backend / Systems */}
-  //             <SelectItem value="python">Python</SelectItem>
-  //             <SelectItem value="java">Java</SelectItem>
-  //             <SelectItem value="c">C</SelectItem>
-  //             <SelectItem value="cpp">C++</SelectItem>
-  //             <SelectItem value="csharp">C#</SelectItem>
-  //             <SelectItem value="go">Go</SelectItem>
-  //             <SelectItem value="rust">Rust</SelectItem>
-  //             <SelectItem value="php">PHP</SelectItem>
-  //             <SelectItem value="ruby">Ruby</SelectItem>
-  //             <SelectItem value="kotlin">Kotlin</SelectItem>
-  //             <SelectItem value="swift">Swift</SelectItem>
-  //             <SelectItem value="scala">Scala</SelectItem>
-  //             <SelectItem value="dart">Dart</SelectItem>
-
-  //             {/* Shell / scripting */}
-  //             <SelectItem value="shell">Shell</SelectItem>
-  //             <SelectItem value="bash">Bash</SelectItem>
-  //             <SelectItem value="powershell">PowerShell</SelectItem>
-
-  //             {/* Data / config */}
-  //             <SelectItem value="yaml">YAML</SelectItem>
-  //             <SelectItem value="xml">XML</SelectItem>
-  //             <SelectItem value="toml">TOML</SelectItem>
-  //             <SelectItem value="ini">INI</SelectItem>
-  //             <SelectItem value="sql">SQL</SelectItem>
-
-  //             {/* Others */}
-  //             <SelectItem value="dockerfile">Dockerfile</SelectItem>
-  //             <SelectItem value="graphql">GraphQL</SelectItem>
-  //             <SelectItem value="lua">Lua</SelectItem>
-  //             <SelectItem value="perl">Perl</SelectItem>
-  //             <SelectItem value="r">R</SelectItem>
-  //             <SelectItem value="objective-c">Objective-C</SelectItem>
-  //             <SelectItem value="objective-cpp">Objective-C++</SelectItem>
-  //             <SelectItem value="haskell">Haskell</SelectItem>
-  //             <SelectItem value="clojure">Clojure</SelectItem>
-  //             <SelectItem value="fsharp">F#</SelectItem>
-  //             <SelectItem value="vb">VB</SelectItem>
-  //             <SelectItem value="bat">Batchfile</SelectItem>
-  //           </SelectGroup>
-  //         </SelectContent>
-  //       </Select>
-  //     </div>
-  //   </>
-  // );
 
   return (
     <SidebarProvider>
@@ -250,9 +149,10 @@ const MainPage = ({ roomSlug, token, initialCode }: mainPageProps) => {
               width={100}
               height={50}
               alt="logo_dark"
-              className="w-20 -ml-2"
-               priority={true}
+              className="-ml-2 w-20"
+              priority={true}
             />
+            <RoomInfo roomSlug={roomSlug} />
           </div>
         </header>
 
