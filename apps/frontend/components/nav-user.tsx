@@ -107,7 +107,7 @@ export function NavUser() {
               <DropdownMenuItem onClick={()=>{
                 toast("Coming Soon !");
               }}>
-                <Sparkles />
+                <CreditCard />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>

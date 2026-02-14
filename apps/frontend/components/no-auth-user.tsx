@@ -5,8 +5,9 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
-  LogOut,
+  LogIn,
   Sparkles,
+  User,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,14 +26,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Login1, Login1Solid } from "./icons/icon";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function NoAuthUser() {
   const { isMobile } = useSidebar();
+  const router = useRouter();
   const user = {
     name: "Anonymous Geek",
     email: "noAyth@abc.in",
-    avatar: "JS",
+    avatar: "AG",
   };
   return (
     <SidebarMenu>
@@ -44,7 +47,7 @@ export function NoAuthUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarFallback className="rounded-lg">CX</AvatarFallback>
+                <AvatarFallback className="rounded-lg"><User/></AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -61,40 +64,34 @@ export function NoAuthUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg">CX</AvatarFallback>
+                  <AvatarFallback className="rounded-lg"><User/></AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={() => {
+                  toast("Coming Soon !");
+                }}
+              >
+                <CreditCard />
+                Upgrade to Pro
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Login1Solid />
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/auth/sign-up");
+                }}
+              >
+                <LogIn />
                 Signup
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -31,8 +31,8 @@ import Image from "next/image";
 
 import { Badge } from "./ui/badge";
 import { useGetRoomDetails } from "@/services/queries";
-import { Spinner } from "./ui/spinner";
 import RoomInfo from "./room-info";
+import { Spinner } from "./ui/spinner";
 interface mainPageProps {
   roomSlug: string;
   token: string;
@@ -84,7 +84,6 @@ const MainPage = ({
     ws.onmessage = (event) => {
       const newMessage = event.data;
       const parsedMessage = JSON.parse(newMessage);
-      console.log("Parsed Message is ", parsedMessage);
       if (parsedMessage.type == "chat") {
         isRemoteUpdateRef.current = true;
         editorRef.current?.setValue(parsedMessage.message);
@@ -92,8 +91,8 @@ const MainPage = ({
       }
       if (parsedMessage.type == "update_editor_settings") {
         isRemoteLanguageUpdateRef.current = true;
-        console.log("inside");
         dispatch(changeLanguage(parsedMessage.language));
+        toast.info(`Editor Language Updated to ${parsedMessage.language}`);
         isRemoteLanguageUpdateRef.current = false;
       }
     };
@@ -108,14 +107,13 @@ const MainPage = ({
 
     // the below changes the current editor language
     monacoRef.current.editor.setModelLanguage(model, lang2);
-    console.log("here hu", lang2);
+
     // // to chnage and sync language changes across editors send a message
     const messageBody = {
       type: "update_editor_settings",
       roomId: roomSlug,
       language: lang2,
     };
-    console.log(JSON.stringify(messageBody));
     wsRef.current?.send(JSON.stringify(messageBody));
   }, [lang2]);
 
@@ -166,7 +164,7 @@ const MainPage = ({
             />
           ) : (
             <div className="flex h-125 items-center justify-center">
-              <p>Loading Workspace... hello</p>
+              <Spinner className="size-8" />
             </div>
           )}
         </div>

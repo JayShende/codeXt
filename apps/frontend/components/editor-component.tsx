@@ -1,6 +1,7 @@
 import { useAppSelector } from "@/redux/hooks";
 import Editor from "@monaco-editor/react";
 import { useEffect, useRef } from "react";
+import { Spinner } from "./ui/spinner";
 
 interface editorProps {
   editorRef: React.RefObject<any>;
@@ -49,6 +50,7 @@ const EditorComponent = ({
         defaultLanguage={initialLanguage}
         defaultValue={initialCode}
         theme="vs-dark" // built-in theme (dark mode)
+        loading={<Spinner className="size-8" />}
         options={{
           fontSize: 14,
           minimap: { enabled: false }, // hide minimap for cleaner UI
