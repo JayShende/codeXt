@@ -5,9 +5,15 @@ import ApiError from "../utils/api-error.js";
 import { nanoid } from "nanoid";
 import randomName from "@scaleway/random-name";
 
-const createRoom = async (userId: string) => {
+const createRoom = async (userId: string, roomName?: string) => {
+  if (roomName == undefined) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Room name is Undefined");
+  }
   const slug = nanoid(5);
-  const roomName = randomName("codeXt");
+  const roomNameGenerated = randomName("codeXt");
+  if (roomName == "") {
+    roomName = roomNameGenerated;
+  }
   const room = await prisma.room.create({
     data: {
       ownerId: userId,
@@ -17,7 +23,7 @@ const createRoom = async (userId: string) => {
       snippet: {
         create: {
           language: "typescript",
-          code: "WelCome to CodeXt",
+          code: "//WelCome to CodeXt App 🚀",
         },
       },
     },
@@ -43,7 +49,6 @@ const roomDetails = async (roomSlug: string) => {
 
   return details;
 };
-
 
 export default {
   createRoom,

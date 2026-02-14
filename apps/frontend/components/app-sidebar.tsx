@@ -38,7 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { changeLanguage } from "@/redux/slice/editor/language.slice";
+import { changeLanguage } from "@/redux/slice/editor/editor.slice";
 import Image from "next/image";
 import { NoAuthUser } from "./no-auth-user";
 // This is sample data.
@@ -172,7 +172,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const language = useAppSelector((state) => state.language);
+  const language = useAppSelector((state) => state.editorSettings.language);
   const userAuthSession = useAppSelector((state) => state.authSession);
   const dispatch = useAppDispatch();
   return (
@@ -180,13 +180,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenuButton size="lg" asChild>
           <div>
-            <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg border p-0.5">
+            <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg border p-0">
               <Image
                 src="/asset/images/codext_new.png"
                 width={32}
                 height={32}
                 alt="logo"
                 priority={true}
+                className="bg-muted"
               />
             </div>
             <div className="flex flex-col gap-0.5 leading-none">

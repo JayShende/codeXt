@@ -107,8 +107,8 @@ wss.on("connection", (ws, req) => {
     }
     if (parsedData.type == "update_editor_settings") {
       const roomId = parsedData.roomId;
-      // const settings = parsedData.settings;
-      const language = parsedData.language;
+      const settings = parsedData.settings;
+      // const language = parsedData.language;
       // update the settings in the database
       try {
         const room = await prisma.room.findFirst({
@@ -121,7 +121,9 @@ wss.on("connection", (ws, req) => {
             roomId: room?.id,
           },
           data: {
-            language: language,
+            language: settings.language,
+            fontSize: settings.fontSize,
+            theme: settings.theme,
           },
         });
       } catch (error) {
@@ -143,7 +145,11 @@ wss.on("connection", (ws, req) => {
             JSON.stringify({
               type: "update_editor_settings",
               roomId,
-              language: language,
+              settings: {
+                language: settings.language,
+                fontSize: settings.fontSize,
+                theme: settings.theme,
+              },
             }),
           );
         }

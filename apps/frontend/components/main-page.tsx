@@ -2,7 +2,6 @@
 
 import "dotenv/config";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { changeLanguage } from "@/redux/slice/editor/language.slice";
 import { setRoomSlug } from "@/redux/slice/app/roomSlug.slice";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
@@ -34,11 +33,18 @@ import { useGetRoomDetails } from "@/services/queries";
 import RoomInfo from "./room-info";
 import { Spinner } from "./ui/spinner";
 import { CheckCheck, Copy } from "lucide-react";
+import {
+  changeLanguage,
+  chnagefontSize,
+  chnageTheme,
+} from "@/redux/slice/editor/editor.slice";
 interface mainPageProps {
   roomSlug: string;
   token: string;
   initialCode: string;
   initialLanguage: string;
+  initialTheme: string;
+  initialFontSize: number;
 }
 
 const MainPage = ({
@@ -46,6 +52,8 @@ const MainPage = ({
   token,
   initialCode,
   initialLanguage,
+  initialTheme,
+  initialFontSize,
 }: mainPageProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<any>(null);
@@ -54,7 +62,13 @@ const MainPage = ({
   const wsRef = useRef<WebSocket | null>(null);
   const monacoRef = useRef<any>(null);
 
-  const lang2 = useAppSelector((state) => state.language);
+  const editorLanguage = useAppSelector(
+    (state) => state.editorSettings.language
+  );
+  const editorFontSize = useAppSelector(
+    (state) => state.editorSettings.fontSize
+  );
+  const editorTheme = useAppSelector((state) => state.editorSettings.theme);
   const roomSlugHook = useAppSelector((state) => state.roomSlug);
   const initialCodeHook = useAppSelector((state) => state.initcode);
   const userAuthSession = useAppSelector((state) => state.authSession);
@@ -62,11 +76,11 @@ const MainPage = ({
   const isOpen = useAppSelector((state) => state.sidebarToggle);
   const [pressAction, setPressAction] = useState(false);
   // WebSocket
-  // dispatch(changeLanguage(initialLanguage));
   useEffect(() => {
     const wsUrl = `ws://localhost:8080?token=${token}`;
 
     const ws = new WebSocket(wsUrl);
+    console.log(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -93,8 +107,10 @@ const MainPage = ({
       }
       if (parsedMessage.type == "update_editor_settings") {
         isRemoteLanguageUpdateRef.current = true;
-        dispatch(changeLanguage(parsedMessage.language));
-        toast.info(`Editor Language Updated to ${parsedMessage.language}`);
+        dispatch(changeLanguage(parsedMessage.settings.language));
+        dispatch(chnagefontSize(parsedMessage.settings.fontSize));
+        dispatch(chnageTheme(parsedMessage.settings.theme));
+        toast.info(`Editor Settings Updated`);
         isRemoteLanguageUpdateRef.current = false;
       }
     };
@@ -108,23 +124,38 @@ const MainPage = ({
     if (!model) return;
 
     // the below changes the current editor language
-    monacoRef.current.editor.setModelLanguage(model, lang2);
+    monacoRef.current.editor.setModelLanguage(model, editorLanguage);
+    monacoRef.current.editor.setTheme(editorTheme);
+    editorRef.current.updateOptions({ fontSize: editorFontSize });
 
     // // to chnage and sync language changes across editors send a message
     const messageBody = {
       type: "update_editor_settings",
       roomId: roomSlug,
-      language: lang2,
+      settings: {
+        language: editorLanguage,
+        fontSize: editorFontSize,
+        theme: editorTheme,
+      },
     };
     wsRef.current?.send(JSON.stringify(messageBody));
-  }, [lang2]);
+  }, [editorLanguage, editorFontSize, editorTheme]);
 
   // set the store Variables
   useEffect(() => {
     dispatch(setRoomSlug(roomSlug));
     dispatch(setInitialCode(initialCode));
     dispatch(changeLanguage(initialLanguage));
-  }, [roomSlug, initialCode, dispatch, initialLanguage]);
+    dispatch(chnageTheme(initialTheme));
+    dispatch(chnagefontSize(initialFontSize));
+  }, [
+    roomSlug,
+    initialCode,
+    dispatch,
+    initialLanguage,
+    initialTheme,
+    initialFontSize,
+  ]);
 
   // useEffect(() => {
   //   console.log("Redux UPDATED:", roomSlugHook, initialCodeHook);

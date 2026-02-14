@@ -18,10 +18,12 @@ const EditorComponent = ({
 }: editorProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
-  const editorLanguage = useAppSelector((state) => state.language);
+  const editorLanguage = useAppSelector(
+    (state) => state.editorSettings.language
+  );
   const roomSlug = useAppSelector((state) => state.roomSlug);
   const initialCode = useAppSelector((state) => state.initcode);
-  const initialLanguage = useAppSelector((state) => state.language);
+  const editorSettings = useAppSelector((state) => state.editorSettings);
   // Cleanup any active ResizeObserver on unmount
   useEffect(() => {
     return () => {
@@ -47,12 +49,12 @@ const EditorComponent = ({
     >
       <Editor
         height="100%"
-        defaultLanguage={initialLanguage}
+        defaultLanguage={editorSettings.language}
         defaultValue={initialCode}
-        theme="vs-dark" // built-in theme (dark mode)
+        theme={editorSettings.theme} // built-in theme (dark mode)
         loading={<Spinner className="size-8" />}
         options={{
-          fontSize: 14,
+          fontSize: editorSettings.fontSize,
           minimap: { enabled: false }, // hide minimap for cleaner UI
           wordWrap: "on",
           automaticLayout: true, // responsive resizing

@@ -29,7 +29,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { changeLanguage } from "@/redux/slice/editor/language.slice";
+import {
+  changeLanguage,
+  chnagefontSize,
+  chnageTheme,
+} from "@/redux/slice/editor/editor.slice";
 
 export function NavMain({
   items,
@@ -45,7 +49,13 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const lang2 = useAppSelector((state) => state.language);
+  const editorLanguage = useAppSelector(
+    (state) => state.editorSettings.language
+  );
+  const editorFontSize = useAppSelector(
+    (state) => state.editorSettings.fontSize
+  );
+  const editorTheme = useAppSelector((state) => state.editorSettings.theme);
   const dispatch = useAppDispatch();
   return (
     <SidebarGroup>
@@ -53,11 +63,11 @@ export function NavMain({
       <SidebarMenu>
         <SidebarMenuItem>
           <Select
-            value={lang2}
+            value={editorLanguage}
             onValueChange={(value) => {
               console.log("the value is ", value);
               dispatch(changeLanguage(value));
-              console.log("New Value", lang2);
+              console.log("New Value", editorLanguage);
             }}
           >
             <SidebarMenuButton tooltip="Editor Language" asChild>
@@ -129,10 +139,10 @@ export function NavMain({
           </Select>
 
           <Select
-            value="3"
-            disabled
+            value={String(editorFontSize)}
             onValueChange={(value) => {
               console.log("The Font size Chnaged->", value);
+              dispatch(chnagefontSize(Number(value)));
             }}
           >
             <SidebarMenuButton tooltip="Font Size" asChild>
@@ -146,23 +156,22 @@ export function NavMain({
 
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="typescript">TypeScript</SelectItem>
-                <SelectItem value="html">HTML</SelectItem>
-                <SelectItem value="css">CSS</SelectItem>
-                <SelectItem value="scss">SCSS</SelectItem>
-                <SelectItem value="less">LESS</SelectItem>
-                <SelectItem value="json">JSON</SelectItem>
-                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="14">14</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+                <SelectItem value="16">16</SelectItem>
+                <SelectItem value="17">17</SelectItem>
+                <SelectItem value="18">18</SelectItem>
+                <SelectItem value="19">19</SelectItem>
+                <SelectItem value="20">20</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
 
           <Select
-            value="vscode_dark"
-            disabled
+            value={editorTheme}
             onValueChange={(value) => {
-              console.log("The Font size Chnaged->", value);
+              console.log("Theme Chnaged->", value);
+              dispatch(chnageTheme(value));
             }}
           >
             <SidebarMenuButton tooltip="Editor Theme" asChild>
@@ -176,14 +185,9 @@ export function NavMain({
 
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="vscode_dark">VS Code Dark</SelectItem>
-                <SelectItem value="typescript">TypeScript</SelectItem>
-                <SelectItem value="html">HTML</SelectItem>
-                <SelectItem value="css">CSS</SelectItem>
-                <SelectItem value="scss">SCSS</SelectItem>
-                <SelectItem value="less">LESS</SelectItem>
-                <SelectItem value="json">JSON</SelectItem>
-                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="vs-dark">VS Code Dark</SelectItem>
+                <SelectItem value="vs">VS Code Light</SelectItem>
+                <SelectItem value="hc-black">High Contrast</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

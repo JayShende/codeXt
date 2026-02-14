@@ -41,7 +41,7 @@ export async function proxy(req: NextRequest) {
 
   // 1. Forward the cookies from Next.js to Express
   const cookieHeader = req.headers.get("cookie") || "";
-  console.log("proxy", cookieHeader);
+  // console.log("proxy", cookieHeader);
   let session = null;
   try {
     const authRes = await fetch(EXPRESS_AUTH_URL, {
@@ -53,7 +53,7 @@ export async function proxy(req: NextRequest) {
 
     if (authRes.ok) {
       session = await authRes.json();
-      console.log(session);
+      // console.log(session);
     }
   } catch (error) {
     console.error("Auth Backend Unreachable:", error);

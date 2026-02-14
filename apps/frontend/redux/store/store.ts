@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import languageSlice from "../slice/editor/language.slice";
+import editorSlice from "../slice/editor/editor.slice";
 import roomSlugSlice from "../slice/app/roomSlug.slice";
 import initialCodeSlice from "../slice/editor/initCode.slice";
 import sideBarToggleSlice from "../slice/sidebar/sideBarToggle.slice";
@@ -9,7 +9,7 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       // Editor Slices
-      language: languageSlice,
+      editorSettings: editorSlice,
       initcode: initialCodeSlice,
       roomSlug: roomSlugSlice,
       sidebarToggle: sideBarToggleSlice,

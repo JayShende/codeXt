@@ -26,8 +26,11 @@ export default async function Page({
     roomId: roomId,
   };
   const token = jwt.sign(tokenPayload, JWT_SECRET);
+  console.log(token);
   let initialCode: string | undefined = "";
   let initialLanguage: string | undefined = "";
+  let initialTheme: string | undefined = "";
+  let initialFontSize: number | undefined = 14;
   try {
     const room = await prisma.room.findFirst({
       where: {
@@ -42,14 +45,19 @@ export default async function Page({
         roomId: room?.id,
       },
     });
+    console.log(snippet);
     initialCode = snippet?.code || " ";
     initialLanguage = snippet?.language || " ";
+    initialFontSize = snippet?.fontSize || 14;
+    initialTheme = snippet?.theme || "vs-dark";
     return (
       <MainPage
         initialCode={initialCode}
         roomSlug={roomId}
         token={token}
         initialLanguage={initialLanguage}
+        initialTheme={initialTheme}
+        initialFontSize={initialFontSize}
       />
     );
   } catch (error) {
