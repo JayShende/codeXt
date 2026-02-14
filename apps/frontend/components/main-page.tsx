@@ -33,6 +33,7 @@ import { Badge } from "./ui/badge";
 import { useGetRoomDetails } from "@/services/queries";
 import RoomInfo from "./room-info";
 import { Spinner } from "./ui/spinner";
+import { CheckCheck, Copy } from "lucide-react";
 interface mainPageProps {
   roomSlug: string;
   token: string;
@@ -59,6 +60,7 @@ const MainPage = ({
   const userAuthSession = useAppSelector((state) => state.authSession);
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.sidebarToggle);
+  const [pressAction, setPressAction] = useState(false);
   // WebSocket
   // dispatch(changeLanguage(initialLanguage));
   useEffect(() => {
@@ -135,8 +137,8 @@ const MainPage = ({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
+        <header className="mx-4 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
@@ -152,6 +154,25 @@ const MainPage = ({
             />
             <RoomInfo roomSlug={roomSlug} />
           </div>
+          <Button
+            className="mr-2 cursor-pointer"
+            variant="secondary"
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `http://localhost:3000/${roomSlug}`
+              );
+              setPressAction(true);
+              setTimeout(() => {
+                setPressAction(false);
+              }, 1000);
+            }}
+          >
+            <div className="flex items-center gap-x-2">
+              {pressAction ? <CheckCheck /> : <Copy />}
+              {pressAction ? <span>Copied</span> : <span>Copy URL</span>}
+            </div>
+          </Button>
+          <Button>Expires in 24 Hrs</Button>
         </header>
 
         <div className="h-full p-4 pt-0">

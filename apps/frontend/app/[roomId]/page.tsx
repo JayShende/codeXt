@@ -3,6 +3,7 @@ import { getAuthSession } from "@/lib/auth-session";
 import { prisma } from "@repo/database";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
+import { toast } from "sonner";
 export default async function Page({
   params,
 }: {
@@ -33,7 +34,9 @@ export default async function Page({
         roomSlug: roomId,
       },
     });
-
+    if (room?.expiresAt! < new Date()) {
+      throw new Error("Room expired");
+    }
     const snippet = await prisma.snippet.findFirst({
       where: {
         roomId: room?.id,
@@ -41,17 +44,18 @@ export default async function Page({
     });
     initialCode = snippet?.code || " ";
     initialLanguage = snippet?.language || " ";
+    return (
+      <MainPage
+        initialCode={initialCode}
+        roomSlug={roomId}
+        token={token}
+        initialLanguage={initialLanguage}
+      />
+    );
   } catch (error) {
     console.log("Error in Db Query", error);
   }
-  return (
-    <MainPage
-      initialCode={initialCode}
-      roomSlug={roomId}
-      token={token}
-      initialLanguage={initialLanguage}
-    />
-  );
+  return <div>room Expired</div>;
 }
 
 async function checkRoomId(roomId: string) {
