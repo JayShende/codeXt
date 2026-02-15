@@ -1,4 +1,6 @@
 "use client";
+import HomeSidebar from "@/components/home-sidebar";
+import MainDashboard from "@/components/main-dashboard";
 import { Button } from "@/components/ui/button";
 import { logOut } from "@/services/api";
 import { useLogOut } from "@/services/mutations";
@@ -12,44 +14,52 @@ const Page = () => {
   const logOutMutation = useLogOut();
   const router = useRouter();
   
-  return (
-    <div>
-      Hello Ji This is Dashboard
-      <pre>{JSON.stringify(session.data, null, 2)}</pre>
-      <Button
-        variant="destructive"
-        // onClick={() => {
-        //   logOutMutation.mutate(undefined, {
-        //     onSuccess: () => {
-        //       toast.success("Log-out successfully!");
-        //       router.push("/auth/sign-in");
-        //     },
-        //     onError: (error) => {
-        //       if (axios.isAxiosError(error)) {
-        //         // Better Auth usually sends the message in error.response.data
-        //         // You don't usually need JSON.parse(error.request.response) because Axios does it for you
-        //         const message =
-        //           error.response?.data?.message || "An auth error occurred";
-        //         toast.error(message);
+  // return (
+  //   <div>
+  //     Hello Ji This is Dashboard
+  //     <pre>{JSON.stringify(session.data, null, 2)}</pre>
+  //     <Button
+  //       variant="destructive"
+  //       // onClick={() => {
+  //       //   logOutMutation.mutate(undefined, {
+  //       //     onSuccess: () => {
+  //       //       toast.success("Log-out successfully!");
+  //       //       router.push("/auth/sign-in");
+  //       //     },
+  //       //     onError: (error) => {
+  //       //       if (axios.isAxiosError(error)) {
+  //       //         // Better Auth usually sends the message in error.response.data
+  //       //         // You don't usually need JSON.parse(error.request.response) because Axios does it for you
+  //       //         const message =
+  //       //           error.response?.data?.message || "An auth error occurred";
+  //       //         toast.error(message);
 
-        //         console.log("Status:", error.response?.status);
-        //         console.log("Body:", error.response?.data);
-        //       } else {
-        //         // Handle non-axios errors (like code crashes)
-        //         toast.error(error.message);
-        //       }
-        //     },
-        //   });
-        // }}
-        onClick={() => {
-          logOutMutation.mutate();
-        }}
-        disabled={logOutMutation.isPending}
-      >
-        Log Out
-      </Button>
-    </div>
-  );
+  //       //         console.log("Status:", error.response?.status);
+  //       //         console.log("Body:", error.response?.data);
+  //       //       } else {
+  //       //         // Handle non-axios errors (like code crashes)
+  //       //         toast.error(error.message);
+  //       //       }
+  //       //     },
+  //       //   });
+  //       // }}
+  //       onClick={() => {
+  //         logOutMutation.mutate();
+  //       }}
+  //       disabled={logOutMutation.isPending}
+  //     >
+  //       Log Out
+  //     </Button>
+  //   </div>
+  // );
+
+return(
+  <div className="flex h-screen bg-background">
+    <HomeSidebar/>
+    <MainDashboard/>
+  </div>
+)
+
 };
 
 export default Page;
