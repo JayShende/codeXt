@@ -50,7 +50,67 @@ const roomDetails = async (roomSlug: string) => {
   return details;
 };
 
+const allUserRoomsData = async (userId: string) => {
+  const allData = await prisma.room.findMany({
+    where: {
+      ownerId: userId,
+    },
+    include: {
+      snippet: {
+        select: {
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return allData;
+};
+
+export const deleteRoom = async (
+  roomId: string,
+  roomSlug: string,
+  userId: string,
+) => {
+  // check if the roomId, roomSlug belongs to the user
+  const roomDetails = await prisma.room.findUnique({
+    where: {
+      id: roomId,
+      roomSlug: roomSlug,
+    },
+  });
+  console.log(roomDetails);
+  if (roomDetails == null) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "No Room Exist With the Given roomId, roomSlug",
+    );
+  }
+
+  // check if the room fetched belongs to the user Or not
+  if (roomDetails.ownerId != userId) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "The Room Don't Belong to The User",
+    );
+  }
+
+  // Proceed with the Deleteion of the Room
+
+  const response = await prisma.room.delete({
+    where: {
+      roomSlug: roomSlug,
+      id: roomId,
+      ownerId: userId,
+    },
+  });
+
+  return response;
+};
+
 export default {
   createRoom,
   roomDetails,
+  allUserRoomsData,
+  deleteRoom,
 };

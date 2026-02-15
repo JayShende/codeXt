@@ -50,7 +50,62 @@ const roomDetails = async (req: Request, res: Response) => {
   }
 };
 
+//  name last updated at created(optional), status, at actions-> open in new tab , copy , delete
+
+const allUserRoomsData = async (req: Request, res: Response) => {
+  try {
+    const allData = await roomService.allUserRoomsData(req.user?.id!);
+    return response(res, HttpStatus.OK, "Data Fetching Successfull", allData);
+  } catch (error) {
+    console.log(error);
+    if (error instanceof ApiError) {
+      return response(res, error.statusCode, error.message, null);
+    }
+    return response(
+      res,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      "Internal server error",
+      error,
+    );
+  }
+};
+
+const deleteRoom = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+    const roomId = body.roomId;
+    const roomSlug = body.roomSlug;
+    if (roomId == null || roomSlug == null) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, "roomId/roomSlug is Required");
+    }
+    const deleteRoom = await roomService.deleteRoom(
+      roomId,
+      roomSlug,
+      req.user?.id!,
+    );
+    return response(
+      res,
+      HttpStatus.OK,
+      "Room Deletion Successfull",
+      deleteRoom,
+    );
+  } catch (error) {
+    console.log(error);
+    if (error instanceof ApiError) {
+      return response(res, error.statusCode, error.message, null);
+    }
+    return response(
+      res,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      "Internal server error",
+      error,
+    );
+  }
+};
+
 export default {
   createRoom,
   roomDetails,
+  allUserRoomsData,
+  deleteRoom,
 };
