@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   BadgeCheck,
@@ -8,13 +8,9 @@ import {
   LogOut,
   Sparkles,
   User,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,44 +19,46 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { useAppSelector } from "@/redux/hooks"
-import { toast } from "sonner"
-import { useLogOut } from "@/services/mutations"
+} from "@/components/ui/sidebar";
+import { useAppSelector } from "@/redux/hooks";
+import { toast } from "sonner";
+import { useLogOut } from "@/services/mutations";
 
-interface sessionProps{
-  expiresAt:string
-  token:string
-  createdAt:string
-  updatedAt:string
-  ipAddress:string
-  userAgent:string
-  userId:string
-  id:string
+interface sessionProps {
+  expiresAt: string;
+  token: string;
+  createdAt: string;
+  updatedAt: string;
+  ipAddress: string;
+  userAgent: string;
+  userId: string;
+  id: string;
 }
-interface userProps{
-  name:string
-  email:string
-  emailVerified:boolean
-  image:string
-  createdAt:string
-  updatedAt:string
-  id:string
+interface userProps {
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
 }
-interface sessionObjectProps{
-session?:sessionProps
-user?:userProps
+export interface sessionObjectProps {
+  session?: sessionProps;
+  user?: userProps;
 }
 
 export function NavUser() {
-  const { isMobile } = useSidebar()
-  const authSession:sessionObjectProps=useAppSelector((state)=>state.authSession)
+  const { isMobile } = useSidebar();
+  const authSession: sessionObjectProps = useAppSelector(
+    (state) => state.authSession
+  );
   const logOutMutation = useLogOut();
   return (
     <SidebarMenu>
@@ -74,12 +72,16 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 {/* <AvatarImage src={authSession.user.avatar} alt={user.name} /> */}
                 <AvatarFallback className="rounded-lg">
-                  <User/>
+                  <User />
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{authSession.user!.name}</span>
-                <span className="truncate text-xs">{authSession.user!.email}</span>
+                <span className="truncate font-medium">
+                  {authSession.user!.name}
+                </span>
+                <span className="truncate text-xs">
+                  {authSession.user!.email}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -94,29 +96,39 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   {/* <AvatarImage src={user.avatar} alt={authSession.user.name} /> */}
-                  <AvatarFallback className="rounded-lg"><User/></AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    <User />
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{authSession.user!.name}</span>
-                  <span className="truncate text-xs">{authSession.user!.email}</span>
+                  <span className="truncate font-medium">
+                    {authSession.user!.name}
+                  </span>
+                  <span className="truncate text-xs">
+                    {authSession.user!.email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={()=>{
-                toast("Coming Soon !");
-              }}>
+              <DropdownMenuItem
+                onClick={() => {
+                  toast("Coming Soon !");
+                }}
+              >
                 <CreditCard />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => {
-          logOutMutation.mutate();
-        }}
-        disabled={logOutMutation.isPending}>
+            <DropdownMenuItem
+              onClick={() => {
+                logOutMutation.mutate();
+              }}
+              disabled={logOutMutation.isPending}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>
@@ -124,5 +136,5 @@ export function NavUser() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

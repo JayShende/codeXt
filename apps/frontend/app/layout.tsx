@@ -5,6 +5,7 @@ import StoreProvider from "@/redux/StoreProvider";
 import { Host_Grotesk, Onest } from "next/font/google";
 import { getAuthSession } from "@/lib/auth-session";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const host_grotesk = Host_Grotesk({
   subsets: ["latin"],
@@ -32,12 +33,19 @@ export default async function RootLayout({
 }>) {
   const session = await getAuthSession();
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${host_grotesk.variable} ${onest.variable}`}>
-        <TanstackProvider>
-          <StoreProvider session={session}>{children}</StoreProvider>
-          <Toaster position="top-center"/>
-        </TanstackProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TanstackProvider>
+            <StoreProvider session={session}>{children}</StoreProvider>
+            <Toaster position="top-center" />
+          </TanstackProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

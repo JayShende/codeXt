@@ -18,7 +18,7 @@ export default async function Page({
       </div>
     );
   }
-  getAuthSession();
+  // getAuthSession();
   const JWT_SECRET = process.env.WS_JWT_SECRET || "";
 
   // Generate the Token
@@ -45,7 +45,7 @@ export default async function Page({
         roomId: room?.id,
       },
     });
-    console.log(snippet);
+    // console.log(snippet);
     initialCode = snippet?.code || " ";
     initialLanguage = snippet?.language || " ";
     initialFontSize = snippet?.fontSize || 14;
@@ -61,9 +61,12 @@ export default async function Page({
       />
     );
   } catch (error) {
+    if (error instanceof Error && error.message === "Room expired") {
+      return <div>Room Expired</div>;
+    }
     console.log("Error in Db Query", error);
   }
-  return <div>room Expired</div>;
+  return <div>Error</div>;
 }
 
 async function checkRoomId(roomId: string) {

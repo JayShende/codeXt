@@ -5,7 +5,7 @@ import ProCard from "./pro-card";
 
 const HomeSidebar = () => {
   return (
-    <div className="flex w-[15%] flex-col justify-between bg-white px-3 py-4">
+    <div className="bg-card flex w-[15%] flex-col justify-between px-3 py-4">
       <div>
         <div className="flex items-center gap-2">
           <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg border p-0">
