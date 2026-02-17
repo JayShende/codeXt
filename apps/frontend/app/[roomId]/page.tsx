@@ -26,7 +26,7 @@ export default async function Page({
     roomId: roomId,
   };
   const token = jwt.sign(tokenPayload, JWT_SECRET);
-  console.log(token);
+
   let initialCode: string | undefined = "";
   let initialLanguage: string | undefined = "";
   let initialTheme: string | undefined = "";

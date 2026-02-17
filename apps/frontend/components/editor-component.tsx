@@ -45,7 +45,7 @@ const EditorComponent = ({
   return (
     <div
       ref={containerRef}
-      className="relative h-full w-full overflow-hidden rounded-lg"
+      className="relative h-full w-full overflow-hidden rounded-lg "
     >
       <Editor
         height="100%"

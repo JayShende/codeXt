@@ -1,4 +1,7 @@
 import axios from "axios";
+import "dotenv/config";
+import { deleteRoomProps } from "./mutations";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export interface signUpBody {
   name: string;
@@ -14,7 +17,7 @@ export interface signInBody {
 export const signUp = async (data: signUpBody) => {
   const response = await axios({
     method: "post",
-    url: "http://localhost:3001/api/auth/sign-up/email",
+    url: `${BACKEND_URL}api/auth/sign-up/email`,
     data: data,
     withCredentials: true,
   });
@@ -24,7 +27,7 @@ export const signUp = async (data: signUpBody) => {
 export const signIn = async (data: signInBody) => {
   const response = await axios({
     method: "post",
-    url: "http://localhost:3001/api/auth/sign-in/email",
+    url: `${BACKEND_URL}api/auth/sign-in/email`,
     data: data,
     withCredentials: true,
   });
@@ -34,7 +37,7 @@ export const signIn = async (data: signInBody) => {
 export const getSession = async () => {
   const response = await axios({
     method: "get",
-    url: "http://localhost:3001/api/auth/get-session",
+    url: `${BACKEND_URL}api/auth/get-session`,
     withCredentials: true,
   });
 
@@ -44,7 +47,7 @@ export const getSession = async () => {
 export const logOut = async () => {
   const response = await axios({
     method: "post",
-    url: "http://localhost:3001/api/auth/sign-out",
+    url: `${BACKEND_URL}api/auth/sign-out`,
     withCredentials: true,
   });
 
@@ -54,7 +57,39 @@ export const logOut = async () => {
 export const getRoomInfo = async (roomSlug: string) => {
   const response = await axios({
     method: "get",
-    url: `http://localhost:3001/v1/room/getRoomDetails/${roomSlug}`,
+    url: `${BACKEND_URL}v1/room/getRoomDetails/${roomSlug}`,
   });
   return response.data.data;
+};
+
+export const getAllUserRoomsData = async () => {
+  const response = await axios({
+    method: "get",
+    url: `${BACKEND_URL}v1/room/getAllUserRoomsData`,
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const deleteRoom = async (data: deleteRoomProps) => {
+  const response = await axios({
+    method: "post",
+    data: data,
+    url: `${BACKEND_URL}v1/room/deleteRoom`,
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+
+export const createRoom = async (roomName: string) => {
+  const response = await axios({
+    method: "post",
+    data: {
+      roomName: roomName,
+    },
+    url: `${BACKEND_URL}v1/room/createRoom`,
+    withCredentials: true,
+  });
+  return response.data;
 };

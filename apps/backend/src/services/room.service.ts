@@ -64,7 +64,10 @@ const allUserRoomsData = async (userId: string) => {
     },
   });
 
-  return allData;
+   return allData.map(({ snippet, ...room }) => ({
+    ...room,
+    snippetUpdatedAt: snippet?.updatedAt ?? null,
+  }));
 };
 
 export const deleteRoom = async (

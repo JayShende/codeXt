@@ -1,8 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
-import { logOut, signIn, signInBody, signUp, signUpBody } from "./api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  createRoom,
+  deleteRoom,
+  logOut,
+  signIn,
+  signInBody,
+  signUp,
+  signUpBody,
+} from "./api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { error } from "console";
 
 export function useSignUp() {
   const router = useRouter();
@@ -37,7 +46,8 @@ export function useSignIn() {
     mutationFn: (data: signInBody) => signIn(data),
 
     onSuccess: () => {
-      toast.success("Account created successfully!");
+      toast.success("Login SuccessFull !");
+      toast.success("Welcome too CodeXt App 🚀");
       router.push("/dashboard");
     },
     onError: (error) => {
@@ -80,6 +90,59 @@ export function useLogOut() {
         // Handle non-axios errors (like code crashes)
         toast.error(error.message);
       }
+    },
+  });
+}
+
+export interface deleteRoomProps {
+  roomId: string;
+  roomSlug: string;
+}
+
+export function useDeleteRoom() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: deleteRoomProps) => deleteRoom(data),
+    onSettled: async (error, variables) => {
+      if (error) {
+        console.log(error);
+      }
+      await queryClient.invalidateQueries({
+        queryKey: ["User_All_Room_Data"],
+      });
+    },
+    onSuccess: () => {
+      toast.success("Room Deleted successfully!");
+    },
+    onMutate: () => {
+      console.log("Mutatted");
+    },
+    onError: () => {
+      toast.error("Error in Deleting Room, Try Again !!");
+    },
+  });
+}
+
+export function useCreateRoom() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (roomName: string) => createRoom(roomName),
+    onSettled: async (error, variables) => {
+      if (error) {
+        console.log(error);
+      }
+      await queryClient.invalidateQueries({
+        queryKey: ["User_All_Room_Data"],
+      });
+    },
+    onSuccess: () => {
+      toast.success("Room Created Successfully!");
+    },
+    onMutate: () => {
+      console.log("Mutatted");
+    },
+    onError: () => {
+      toast.error("Error in Creating Room, Try Again !!");
     },
   });
 }

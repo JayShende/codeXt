@@ -165,7 +165,11 @@ const MainPage = ({
     roomSlugHook === roomSlug && initialCodeHook === initialCode;
 
   return (
-    <SidebarProvider>
+    <>
+    {/* <div>
+      For Better Experience Use the Desktop View !!!
+    </div> */}
+    <SidebarProvider className=" ">
       <AppSidebar />
       <SidebarInset>
         <header className="mx-4 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -222,6 +226,7 @@ const MainPage = ({
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </>
   );
 };
 

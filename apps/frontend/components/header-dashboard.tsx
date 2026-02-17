@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/redux/hooks";
 import React from "react";

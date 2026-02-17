@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRoomInfo, getSession } from "./api";
+import { getAllUserRoomsData, getRoomInfo, getSession } from "./api";
 
 export function useGetSession() {
   return useQuery({
@@ -14,3 +14,26 @@ export function useGetRoomDetails(roomSlug: string) {
     queryFn: () => getRoomInfo(roomSlug),
   });
 }
+
+// export function useGetAllUserRoomsData() {
+//   return useQuery({
+//     queryKey: ["User_All_Room_Data"],
+//     queryFn: getAllUserRoomsData,
+//   });
+// }
+
+export const useGetAllUserRoomsData = () => {
+  return useQuery({
+    queryKey: ["User_All_Room_Data"],
+    queryFn: getAllUserRoomsData,
+    select: (res) => ({
+      ...res,
+      data: res.data.map((room: any) => ({
+        ...room,
+        createdAt: new Date(room.createdAt),
+        expiresAt: new Date(room.expiresAt),
+        snippetUpdatedAt: new Date(room.snippetUpdatedAt),
+      })),
+    }),
+  });
+};
