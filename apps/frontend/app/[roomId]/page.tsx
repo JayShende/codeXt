@@ -81,7 +81,7 @@ async function checkRoomId(roomId: string) {
     }
     return true;
   } catch (error) {
-    console.log("Some Error in Making the DB Call", error);
+    console.log("Some Error in Making the DB Call In The [roomId] Compoenent", error);
     return false;
   }
 }
