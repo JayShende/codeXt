@@ -1,7 +1,8 @@
 import { useAppSelector } from "@/redux/hooks";
 import Editor from "@monaco-editor/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Spinner } from "./ui/spinner";
+import { useDebounce } from "@uidotdev/usehooks";
 
 interface editorProps {
   editorRef: React.RefObject<any>;
@@ -24,6 +25,8 @@ const EditorComponent = ({
   const roomSlug = useAppSelector((state) => state.roomSlug);
   const initialCode = useAppSelector((state) => state.initcode);
   const editorSettings = useAppSelector((state) => state.editorSettings);
+  const [editorCode, setEditorCode] = useState("");
+  const debouncedEditorCode = useDebounce(editorCode, 300);
   // Cleanup any active ResizeObserver on unmount
   useEffect(() => {
     return () => {
@@ -42,10 +45,22 @@ const EditorComponent = ({
     monacoRef.current.editor.setModelLanguage(model, editorLanguage);
   }, [editorLanguage]);
 
+  // Debounced Code
+  useEffect(() => {
+    console.log("Here in Debounced UseEffect()");
+    if (wsRef.current?.readyState == WebSocket.OPEN) {
+      const messageBody = {
+        type: "chat",
+        roomId: roomSlug,
+        message: debouncedEditorCode,
+      };
+      wsRef.current?.send(JSON.stringify(messageBody));
+    }
+  }, [debouncedEditorCode]);
   return (
     <div
       ref={containerRef}
-      className="relative h-full w-full overflow-hidden rounded-lg "
+      className="relative h-full w-full overflow-hidden rounded-lg"
     >
       <Editor
         height="100%"
@@ -85,13 +100,14 @@ const EditorComponent = ({
 
           editor.onDidChangeModelContent(() => {
             if (isRemoteUpdateRef.current) return;
-            const editorCode = editor.getValue();
-            const messageBody = {
-              type: "chat",
-              roomId: roomSlug,
-              message: editorCode,
-            };
-            wsRef.current?.send(JSON.stringify(messageBody));
+            const editorCodeValue = editor.getValue();
+            setEditorCode(editorCodeValue)
+            // const messageBody = {
+            //   type: "chat",
+            //   roomId: roomSlug,
+            //   message: editorCode,
+            // };
+            // wsRef.current?.send(JSON.stringify(messageBody));
           });
         }}
       />

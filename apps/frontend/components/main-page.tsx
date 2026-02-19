@@ -75,6 +75,7 @@ const MainPage = ({
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.sidebarToggle);
   const [pressAction, setPressAction] = useState(false);
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
   // WebSocket
   useEffect(() => {
     const wsUrl = `ws://localhost:8080?token=${token}`;
@@ -95,8 +96,15 @@ const MainPage = ({
     ws.onclose = () => {
       console.log("Connection Closed");
       toast.warning("Websocket Connection Closed.");
+      toast.warning("Attempting To Reconnect.");
+      console.log("Here");
+      if (reconnectAttempt != 10) {
+        setReconnectAttempt(reconnectAttempt + 1);
+      }
     };
-
+    if (reconnectAttempt == 10) {
+      toast.warning("Reconnect Failed !");
+    }
     ws.onmessage = (event) => {
       const newMessage = event.data;
       const parsedMessage = JSON.parse(newMessage);
@@ -115,7 +123,7 @@ const MainPage = ({
       }
     };
     return () => ws.close();
-  }, [token]);
+  }, [token, reconnectAttempt]);
 
   useEffect(() => {
     if (!editorRef.current || !monacoRef.current) return;
@@ -166,66 +174,66 @@ const MainPage = ({
 
   return (
     <>
-    {/* <div>
+      {/* <div>
       For Better Experience Use the Desktop View !!!
     </div> */}
-    <SidebarProvider className=" ">
-      <AppSidebar />
-      <SidebarInset>
-        <header className="mx-4 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <Image
-              src="/asset/images/codext_new_light.png"
-              width={100}
-              height={50}
-              alt="logo_dark"
-              className="-ml-2 w-20"
-              priority={true}
-            />
-            <RoomInfo roomSlug={roomSlug} />
-          </div>
-          <Button
-            className="mr-2 cursor-pointer"
-            variant="secondary"
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `http://localhost:3000/${roomSlug}`
-              );
-              setPressAction(true);
-              setTimeout(() => {
-                setPressAction(false);
-              }, 1000);
-            }}
-          >
-            <div className="flex items-center gap-x-2">
-              {pressAction ? <CheckCheck /> : <Copy />}
-              {pressAction ? <span>Copied</span> : <span>Copy URL</span>}
+      <SidebarProvider className=" ">
+        <AppSidebar />
+        <SidebarInset>
+          <header className="mx-4 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 data-[orientation=vertical]:h-4"
+              />
+              <Image
+                src="/asset/images/codext_new_light.png"
+                width={100}
+                height={50}
+                alt="logo_dark"
+                className="-ml-2 w-20"
+                priority={true}
+              />
+              <RoomInfo roomSlug={roomSlug} />
             </div>
-          </Button>
-          <Button>Expires in 24 Hrs</Button>
-        </header>
+            <Button
+              className="mr-2 cursor-pointer"
+              variant="secondary"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `http://localhost:3000/${roomSlug}`
+                );
+                setPressAction(true);
+                setTimeout(() => {
+                  setPressAction(false);
+                }, 1000);
+              }}
+            >
+              <div className="flex items-center gap-x-2">
+                {pressAction ? <CheckCheck /> : <Copy />}
+                {pressAction ? <span>Copied</span> : <span>Copy URL</span>}
+              </div>
+            </Button>
+            <Button>Expires in 24 Hrs</Button>
+          </header>
 
-        <div className="h-full p-4 pt-0">
-          {isDataReady ? (
-            <EditorComponent
-              editorRef={editorRef}
-              monacoRef={monacoRef}
-              isRemoteUpdateRef={isRemoteUpdateRef}
-              wsRef={wsRef}
-            />
-          ) : (
-            <div className="flex h-125 items-center justify-center">
-              <Spinner className="size-8" />
-            </div>
-          )}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+          <div className="h-full p-4 pt-0">
+            {isDataReady ? (
+              <EditorComponent
+                editorRef={editorRef}
+                monacoRef={monacoRef}
+                isRemoteUpdateRef={isRemoteUpdateRef}
+                wsRef={wsRef}
+              />
+            ) : (
+              <div className="flex h-125 items-center justify-center">
+                <Spinner className="size-8" />
+              </div>
+            )}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </>
   );
 };
