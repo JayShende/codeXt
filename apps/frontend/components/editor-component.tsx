@@ -58,7 +58,6 @@ import idlefingers from "@/public/themes/idleFingers.json";
 import krtheme from "@/public/themes/krTheme.json";
 import monoindustrial from "@/public/themes/monoindustrial.json";
 
-import allThemes from "@/public/themes/themelist.json";
 interface editorProps {
   editorRef: React.RefObject<any>;
   monacoRef: React.RefObject<any>;

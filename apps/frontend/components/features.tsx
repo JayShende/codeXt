@@ -1,57 +1,57 @@
-import {
-  Blocks,
-  Bot,
-  ChartPie,
-  Film,
-  MessageCircle,
-  Settings2,
-} from "lucide-react";
+import { User, Palette, Zap, Clock, Rocket, Code2 } from "lucide-react";
 
 const features = [
   {
-    icon: Settings2,
-    title: "Customizable Layouts",
+    icon: Zap,
+    title: "Real-Time Sync",
+    sDesc: "Sync code and editor settings instantly across users.",
     description:
-      "Design your space with drag-and-drop simplicity—create grids, lists, or galleries in seconds.",
+      "Experience seamless collaboration with live updates for code, language, theme, and editor preferences — no refresh required.",
   },
   {
-    icon: Blocks,
-    title: "Interactive Widgets",
+    icon: Code2,
+    title: "Powerful Editor",
+    sDesc: "Powered by Monaco Editor — the engine behind VS Code.",
     description:
-      "Embed polls, quizzes, or forms to keep your audience engaged.",
+      "Enjoy intelligent code editing with autocomplete, syntax highlighting, multi-cursor support, and rich developer tooling.",
   },
   {
-    icon: Bot,
-    title: "AI-Powered Tools",
+    icon: Palette,
+    title: "Fully Customizable",
+    sDesc: "42+ languages with 40+ beautiful editor themes",
     description:
-      "Generate summaries, auto-format content, or translate into multiple languages seamlessly.",
+      "Switch between multiple programming languages and stunning themes to match your workflow and coding vibe..",
   },
   {
-    icon: Film,
-    title: "Media Integrations",
+    icon: Clock,
+    title: "24-Hour Expiry",
+    sDesc: "Temporary snippets that auto-expire after 24 hours.",
     description:
-      "Connect with Spotify, Instagram, or your own media library for dynamic visuals and sound.",
+      "Share quick code examples without worrying about permanent storage — perfect for interviews, debugging, or demos.",
   },
   {
-    icon: ChartPie,
-    title: "Advanced Analytics",
+    icon: Rocket,
+    title: "Instant Access",
+    sDesc: "No login required to start coding.",
     description:
-      "Track engagement, clicks, and user activity with intuitive charts and reports.",
+      "Create and edit snippets instantly. Jump straight into coding without friction.",
   },
   {
-    icon: MessageCircle,
-    title: "Seamless Collaboration",
+    icon: User,
+    title: "User Dashboard",
+
+    sDesc: "Sign up to manage and organize your snippets.",
     description:
-      "Comment, tag, and assign tasks directly within your documents.",
+      "Create an account to save, revisit, and manage your snippets from a clean and intuitive dashboard.",
   },
 ];
 
 const Features = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center py-12">
+    <div className="flex min-h-screen items-center justify-center py-12" id="features">
       <div>
-        <h2 className="text-center font-semibold text-4xl tracking-tight sm:text-5xl">
-          Unleash Your Creativity
+        <h2 className="text-center text-4xl font-semibold tracking-tight sm:text-5xl">
+          Unleash Your Productivity
         </h2>
         <div className="mx-auto mt-10 grid max-w-(--breakpoint-lg) gap-6 px-6 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
@@ -59,11 +59,16 @@ const Features = () => {
               className="flex flex-col rounded-xl border px-5 py-6"
               key={feature.title}
             >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+              <div className="bg-muted mb-4 flex h-10 w-10 items-center justify-center rounded-full">
                 <feature.icon className="size-5" />
               </div>
-              <span className="font-semibold text-lg">{feature.title}</span>
-              <p className="mt-1 text-[15px] text-foreground/80">
+              <span className="text-secondary text-lg font-semibold">
+                {feature.title}
+              </span>
+              <span className="text-md text-muted-foreground">
+                {feature.sDesc}
+              </span>
+              <p className="text-foreground/80 mt-1 text-[15px]">
                 {feature.description}
               </p>
             </div>
