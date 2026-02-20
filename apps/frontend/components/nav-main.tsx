@@ -186,6 +186,76 @@ export function NavMain({
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="vs-dark">VS Code Dark</SelectItem>
+                <SelectItem value="active4d">Active4D</SelectItem>
+                <SelectItem value="allHallowseve">All Hallows Eve</SelectItem>
+                <SelectItem value="amy">Amy</SelectItem>
+                <SelectItem value="birdsofParadise">
+                  Birds of Paradise
+                </SelectItem>
+                <SelectItem value="blackboard">Blackboard</SelectItem>
+                <SelectItem value="brillianceBlack">
+                  Brilliance Black
+                </SelectItem>
+                <SelectItem value="brillianceDull">Brilliance Dull</SelectItem>
+                <SelectItem value="chromeDevtools">Chrome DevTools</SelectItem>
+                <SelectItem value="cloudsMidnight">Clouds Midnight</SelectItem>
+                <SelectItem value="clouds">Clouds</SelectItem>
+                <SelectItem value="cobalt">Cobalt</SelectItem>
+                <SelectItem value="cobalt2">Cobalt2</SelectItem>
+                <SelectItem value="dawn">Dawn</SelectItem>
+                <SelectItem value="dracula">Dracula</SelectItem>
+                <SelectItem value="dreamweaver">Dreamweaver</SelectItem>
+                <SelectItem value="eiffel">Eiffel</SelectItem>
+                <SelectItem value="espressoLibre">Espresso Libre</SelectItem>
+                <SelectItem value="githubDark">GitHub Dark</SelectItem>
+                <SelectItem value="githubLight">GitHub Light</SelectItem>
+                <SelectItem value="github">GitHub</SelectItem>
+                <SelectItem value="idle">IDLE</SelectItem>
+                <SelectItem value="katzenmilch">Katzenmilch</SelectItem>
+                <SelectItem value="kuroirTheme">Kuroir Theme</SelectItem>
+                <SelectItem value="lazy">LAZY</SelectItem>
+                <SelectItem value="magicwbAmiga">MagicWB (Amiga)</SelectItem>
+                <SelectItem value="merbivoreSoft">Merbivore Soft</SelectItem>
+                <SelectItem value="merbivore">Merbivore</SelectItem>
+                <SelectItem value="monokaiBright">Monokai Bright</SelectItem>
+                <SelectItem value="monokai">Monokai</SelectItem>
+                <SelectItem value="nightOwl">Night Owl</SelectItem>
+                <SelectItem value="nord">Nord</SelectItem>
+                <SelectItem value="oceanicNext">Oceanic Next</SelectItem>
+                <SelectItem value="pastelsOnDark">Pastels on Dark</SelectItem>
+                <SelectItem value="slushAndPoppies">
+                  Slush and Poppies
+                </SelectItem>
+                <SelectItem value="solarizedDark">Solarized-dark</SelectItem>
+                <SelectItem value="solarizedLight">Solarized-light</SelectItem>
+                <SelectItem value="spacecadet">SpaceCadet</SelectItem>
+                <SelectItem value="sunburst">Sunburst</SelectItem>
+                <SelectItem value="textmateMacClassic">
+                  Textmate (Mac Classic)
+                </SelectItem>
+                <SelectItem value="tomorrowNightBlue">
+                  Tomorrow-Night-Blue
+                </SelectItem>
+                <SelectItem value="tomorrowNightBright">
+                  Tomorrow-Night-Bright
+                </SelectItem>
+                <SelectItem value="tomorrowNightEighties">
+                  Tomorrow-Night-Eighties
+                </SelectItem>
+                <SelectItem value="tomorrowNight">Tomorrow-Night</SelectItem>
+                <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                <SelectItem value="twilight">Twilight</SelectItem>
+                <SelectItem value="upstreamSunburst">
+                  Upstream Sunburst
+                </SelectItem>
+                <SelectItem value="vibrantInk">Vibrant Ink</SelectItem>
+                <SelectItem value="xcodeDefault">Xcode_default</SelectItem>
+                <SelectItem value="zenburnesque">Zenburnesque</SelectItem>
+                <SelectItem value="iplastic">iPlastic</SelectItem>
+                <SelectItem value="idlefingers">idleFingers</SelectItem>
+                <SelectItem value="krtheme">krTheme</SelectItem>
+                <SelectItem value="monoindustrial">monoindustrial</SelectItem>
+
                 <SelectItem value="vs">VS Code Light</SelectItem>
                 <SelectItem value="hc-black">High Contrast</SelectItem>
               </SelectGroup>

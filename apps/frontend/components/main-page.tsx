@@ -108,17 +108,23 @@ const MainPage = ({
     ws.onmessage = (event) => {
       const newMessage = event.data;
       const parsedMessage = JSON.parse(newMessage);
+
       if (parsedMessage.type == "chat") {
         isRemoteUpdateRef.current = true;
         editorRef.current?.setValue(parsedMessage.message);
         isRemoteUpdateRef.current = false;
       }
+
       if (parsedMessage.type == "update_editor_settings") {
+        console.log("In This Function");
         isRemoteLanguageUpdateRef.current = true;
+
         dispatch(changeLanguage(parsedMessage.settings.language));
         dispatch(chnagefontSize(parsedMessage.settings.fontSize));
         dispatch(chnageTheme(parsedMessage.settings.theme));
+
         toast.info(`Editor Settings Updated`);
+
         isRemoteLanguageUpdateRef.current = false;
       }
     };
@@ -147,6 +153,7 @@ const MainPage = ({
       },
     };
     wsRef.current?.send(JSON.stringify(messageBody));
+    console.log("Yaha Se Gaya");
   }, [editorLanguage, editorFontSize, editorTheme]);
 
   // set the store Variables
