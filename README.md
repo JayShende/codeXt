@@ -6,6 +6,8 @@ CodeXt is a real-time collaborative code sharing platform for quick snippets, in
 
 It is built as a Turborepo monorepo with a Next.js frontend, an Express backend, a dedicated WebSocket server, and Prisma + PostgreSQL for persistence.
 
+[![wakatime](https://wakatime.com/badge/user/3319800a-4f54-4ed9-94d6-1689848d8c5b/project/be72b645-a02d-4438-a908-48d93ad29464.svg)](https://wakatime.com/badge/user/3319800a-4f54-4ed9-94d6-1689848d8c5b/project/be72b645-a02d-4438-a908-48d93ad29464)
+
 ## Screenshots
 
 ### Main App
@@ -19,8 +21,6 @@ It is built as a Turborepo monorepo with a Next.js frontend, an Express backend,
 ### Dashboard
 
 ![CodeXt Dashboard Placeholder](./apps/frontend/public/asset/images/app_dashboard.png)
-
-
 
 ## Core Features
 
@@ -180,6 +180,3 @@ Backend routes are mounted at `/v1`:
 ## License
 
 ISC
-
-
-
